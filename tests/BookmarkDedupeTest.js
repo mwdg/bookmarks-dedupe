@@ -76,7 +76,7 @@ describe( 'BookmarkDedupe', function() {
 
 	it( 'parses bookmark export', function() {
 
-		assert.deepEqual( expectedParse, b.parse() );
+		assert.deepEqual( b.parse(), expectedParse );
 	} );
 
 	it( 'deduplicates correctly', function() {
@@ -86,16 +86,16 @@ describe( 'BookmarkDedupe', function() {
 		delete expectedParse[ 'cheeriojs/cheerio' ];
 		delete expectedParse[ 'cheeriojs/cheerio (1)' ];
 
-		assert.deepEqual( expectedParse, b.dedupe() );
+		assert.deepEqual( b.dedupe(), expectedParse );
 	} );
 
 	it( 'deduplicates and saves to file correctly', function() {
 
 		b.save( b.dedupe() );
 
-		assert.equal( fs.readFileSync( path.join( __dirname, 'resources/test.html.deduped.html' ), {
+		assert.equal( fs.readFileSync( testOut, {
 			encoding: 'utf-8'
-		} ), fs.readFileSync( testOut, {
+		} ), fs.readFileSync( path.join( __dirname, 'resources/test.html.deduped.html' ), {
 			encoding: 'utf-8'
 		} ) );
 	} );
