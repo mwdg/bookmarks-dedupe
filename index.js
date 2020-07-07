@@ -45,6 +45,11 @@ BookmarkDedupe.prototype = {
 
 			switch (tag) {
 
+				case 'html':
+
+					t._parseWalk(out, wrapped.children(), folderPath);
+					break;
+
 				case 'p':
 
 					t._parseWalk(out, wrapped.children().first(), folderPath);
@@ -54,7 +59,7 @@ BookmarkDedupe.prototype = {
 
 					var subfolderName = wrapped.prev().text();
 
-					out[subfolderName] = {
+					out[subfolderName] = out[subfolderName] || {
 						contents: {}
 					};
 
@@ -103,7 +108,7 @@ BookmarkDedupe.prototype = {
 			decodeEntities: false
 		});
 
-		var result = this._parseWalk({}, this.$('dl').first(), ['(root folder)']);
+		var result = this._parseWalk({}, this.$.root(), ['(root folder)']);
 
 		return result;
 	},
@@ -159,6 +164,12 @@ BookmarkDedupe.prototype = {
 	},
 
 	save: function (parsed) {
+
+		// in the simple case of only 1 input file with the default H1 of "Bookmarks" we can delete the outermost layer of
+		// our data structure since netscapeBookmarks will already put "Bookmarks" as the top level.
+		if (Object.keys(parsed).length === 1 && Object.keys(parsed)[0] === "Bookmarks") {
+			parsed = parsed["Bookmarks"].contents;
+		}
 
 		var html = netscapeBookmarks(parsed);
 
