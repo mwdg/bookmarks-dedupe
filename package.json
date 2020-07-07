@@ -29,5 +29,8 @@
 	"preferGlobal": true,
 	"bin": {
 		"bookmarks-dedupe": "main.js"
+	},
+	"devDependencies": {
+		"mocha": "^8.0.1"
 	}
 }
