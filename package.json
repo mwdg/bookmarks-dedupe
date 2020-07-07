@@ -22,7 +22,7 @@
 	},
 	"homepage": "https://github.com/inversion/bookmarks-dedupe#readme",
 	"dependencies": {
-		"argparse": "^1.0.2",
+		"argparse": "^1.0.10",
 		"cheerio": "^0.22.0",
 		"netscape-bookmarks": "^0.1.1"
 	},
