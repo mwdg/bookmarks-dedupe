@@ -3,6 +3,7 @@ README for bookmarks cleaner
 TODO:
 * Tests
 * Upgrade packages
+* proper HTML escaping
 
 Features:
 * Read bookmarks.html from Safari, Firefox and Chrome

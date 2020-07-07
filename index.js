@@ -163,12 +163,15 @@ BookmarkDedupe.prototype = {
 		return parsed;
 	},
 
-	save: function (parsed) {
+	defaultH1: function () {
+		return "Bookmarks Menu";
+	},
 
-		// in the simple case of only 1 input file with the default H1 of "Bookmarks" we can delete the outermost layer of
-		// our data structure since netscapeBookmarks will already put "Bookmarks" as the top level.
-		if (Object.keys(parsed).length === 1 && Object.keys(parsed)[0] === "Bookmarks") {
-			parsed = parsed["Bookmarks"].contents;
+	save: function (parsed) {
+		// in the simple case of only 1 input file with an H1 of "Bookmarks Menu" we can delete the outermost layer of
+		// our data structure since netscapeBookmarks will already put "Bookmarks Menu" as the top level.
+		if (Object.keys(parsed).length === 1 && Object.keys(parsed)[0] === this.defaultH1()) {
+			parsed = parsed[this.defaultH1()].contents;
 		}
 
 		var html = netscapeBookmarks(parsed);
