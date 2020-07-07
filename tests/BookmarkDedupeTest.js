@@ -1,22 +1,22 @@
 'use strict';
 
-var path = require( 'path' );
-var fs = require( 'fs' );
-var assert = require( 'assert' );
-var BookmarkDedupe = require( '../index.js' );
+var path = require('path');
+var fs = require('fs');
+var assert = require('assert');
+var BookmarkDedupe = require('../index.js');
 
-describe( 'BookmarkDedupe', function() {
+describe('BookmarkDedupe', function () {
 
 	var expectedParse, b, testOut = '__test.deduped.html';
 
-	after( function() {
+	after(function () {
 
-		fs.unlinkSync( testOut );
-	} );
+		fs.unlinkSync(testOut);
+	});
 
-	beforeEach( function() {
+	beforeEach(function () {
 
-		b = new BookmarkDedupe( path.join( __dirname, 'resources/test.html' ), testOut );
+		b = new BookmarkDedupe(path.join(__dirname, 'resources/test.html'), testOut);
 
 		expectedParse = {
 			'cheeriojs/cheerio': {
@@ -72,31 +72,31 @@ describe( 'BookmarkDedupe', function() {
 				contents: {}
 			}
 		};
-	} );
+	});
 
-	it( 'parses bookmark export', function() {
+	it('parses bookmark export', function () {
 
-		assert.deepEqual( b.parse(), expectedParse );
-	} );
+		assert.deepEqual(b.parse(), expectedParse);
+	});
 
-	it( 'deduplicates correctly', function() {
+	it('deduplicates correctly', function () {
 
-		delete expectedParse[ 'Bookmarks Bar' ].contents.a.contents.b.contents[ 'bahamas10/node-netscape-bookmarks' ];
-		delete expectedParse[ 'Bookmarks Bar' ].contents.a.contents[ 'bahamas10/node-netscape-bookmarks (1)' ];
-		delete expectedParse[ 'cheeriojs/cheerio' ];
-		delete expectedParse[ 'cheeriojs/cheerio (1)' ];
+		delete expectedParse['Bookmarks Bar'].contents.a.contents.b.contents['bahamas10/node-netscape-bookmarks'];
+		delete expectedParse['Bookmarks Bar'].contents.a.contents['bahamas10/node-netscape-bookmarks (1)'];
+		delete expectedParse['cheeriojs/cheerio'];
+		delete expectedParse['cheeriojs/cheerio (1)'];
 
-		assert.deepEqual( b.dedupe(), expectedParse );
-	} );
+		assert.deepEqual(b.dedupe(), expectedParse);
+	});
 
-	it( 'deduplicates and saves to file correctly', function() {
+	it('deduplicates and saves to file correctly', function () {
 
-		b.save( b.dedupe() );
+		b.save(b.dedupe());
 
-		assert.equal( fs.readFileSync( testOut, {
+		assert.equal(fs.readFileSync(testOut, {
 			encoding: 'utf-8'
-		} ), fs.readFileSync( path.join( __dirname, 'resources/test.html.deduped.html' ), {
+		}), fs.readFileSync(path.join(__dirname, 'resources/test.html.deduped.html'), {
 			encoding: 'utf-8'
-		} ) );
-	} );
-} );
+		}));
+	});
+});

@@ -2,29 +2,29 @@
 
 'use strict';
 
-var ArgumentParser = require( 'argparse' ).ArgumentParser;
-var path = require( 'path' );
+var ArgumentParser = require('argparse').ArgumentParser;
+var path = require('path');
 
-var pkg = require( path.join( __dirname, 'package.json' ) );
+var pkg = require(path.join(__dirname, 'package.json'));
 
-var parser = new ArgumentParser( {
+var parser = new ArgumentParser({
 	addHelp: true,
 	description: pkg.description,
 	version: pkg.version
-} );
+});
 
-parser.addArgument( [ 'file' ], {
+parser.addArgument(['file'], {
 	help: 'File to deduplicate bookmarks in.'
-} );
+});
 
-parser.addArgument( [ '-o' ], {
+parser.addArgument(['-o'], {
 	help: 'Output file, defaults to <filename>.deduped.html'
-} );
+});
 
 var args = parser.parseArgs();
 
-var BookmarkDedupe = require( './index.js' );
+var BookmarkDedupe = require('./index.js');
 
-var b = new BookmarkDedupe( args.file, path.basename( args.file ) + path.join( '.deduped.html' ) );
+var b = new BookmarkDedupe(args.file, path.basename(args.file) + path.join('.deduped.html'));
 
-b.save( b.dedupe() );
+b.save(b.dedupe());
