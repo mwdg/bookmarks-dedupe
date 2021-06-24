@@ -4,6 +4,7 @@ TODO:
 * Tests
 * Upgrade packages
 * proper HTML escaping
+support description ("DD")
 
 Features:
 * Read bookmarks.html from Safari, Firefox and Chrome

@@ -2,7 +2,7 @@
 
 var fs = require('fs');
 var cheerio = require('cheerio');
-var netscapeBookmarks = require('netscape-bookmarks');
+var makebookmarkshtml = require('./makebookmarkshtml.js');
 
 var BookmarkDedupe = function (inFile, outFile) {
 
@@ -57,10 +57,13 @@ BookmarkDedupe.prototype = {
 
 				case 'dl':
 
-					var subfolderName = wrapped.prev().text();
+					var headingElement = wrapped.prev();
+
+					var subfolderName = headingElement.text();
 
 					out[subfolderName] = out[subfolderName] || {
-						contents: {}
+						contents: {},
+						headingElement
 					};
 
 					t._parseWalk(out[subfolderName].contents, wrapped, folderPath.concat([subfolderName]));
@@ -88,12 +91,25 @@ BookmarkDedupe.prototype = {
 						// console.warn( 'Multiple bookmarks with the name', name, 'at', folderPath.join( '->' ) );
 						// console.warn( 'Bookmark with url', url, 'was overwritten' );
 					}
-
+					var urlFields = [
+						'add_date',
+						'last_visit',
+						'last_modified',
+						'icon',
+						'icon_uri',
+						'image',
+						'last_charset'
+					];
 					out[key] = {
 						url: url,
-						add_date: +wrapped.attr('add_date'),
-						icon: wrapped.attr('icon')
+						element: wrapped
 					};
+					urlFields.forEach(function (urlfield) {
+						const attr = wrapped.attr(urlfield);
+						if (attr) {
+							out[key][urlfield] = attr;
+						}
+					});
 					break;
 			}
 
@@ -114,23 +130,18 @@ BookmarkDedupe.prototype = {
 	},
 
 	_dedupeWalk: function (obj, seen) {
-
 		for (var name in obj) {
-
 			var item = obj[name];
-
 			if (item.contents) {
-
 				this._dedupeWalk(item.contents, seen);
-			} else {
-
-				if (seen[item.url]) {
-
+				if (Object.keys(item.contents).length === 0) {
 					delete obj[name];
-
+				}
+			} else {
+				if (seen[item.url]) {
+					delete obj[name];
 					seen[item.url] += 1;
 				} else {
-
 					seen[item.url] = 1;
 				}
 			}
@@ -174,7 +185,7 @@ BookmarkDedupe.prototype = {
 			parsed = parsed[this.defaultH1()].contents;
 		}
 
-		var html = netscapeBookmarks(parsed);
+		var html = makebookmarkshtml(parsed);
 
 		fs.writeFileSync(this.outFile, html);
 	}
